@@ -1,8 +1,8 @@
 package com.michael.libertybank.services;
 
-import com.michael.libertybank.dto.signUp.UserRequestDTO;
-import com.michael.libertybank.dto.signUp.UserResponseDTO;
-import com.michael.libertybank.exception.UserServiceBusinessException;
+import com.michael.libertybank.dto.signUp.CustomerRequestDTO;
+import com.michael.libertybank.dto.signUp.CustomerResponseDTO;
+import com.michael.libertybank.exception.CustomerServiceBusinessException;
 import com.michael.libertybank.model.Customer;
 import com.michael.libertybank.repository.CustomerRepository;
 import com.michael.libertybank.util.ValueMapper;
@@ -18,52 +18,52 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 public class CustomerService implements ICustomerService {
-    private CustomerRepository userRepository;
+    private CustomerRepository customerRepository;
     @Override
-    public UserResponseDTO registerUser(UserRequestDTO userRequestDto) throws UserServiceBusinessException {
-        UserResponseDTO userResponseDTO;
+    public CustomerResponseDTO registerUser(CustomerRequestDTO customerRequestDto) throws CustomerServiceBusinessException {
+        CustomerResponseDTO customerResponseDTO;
         try{
             log.info("CustomerService: registerNewUser execution started");
-            Customer customer = ValueMapper.convertToUserEntity(userRequestDto);
+            Customer customer = ValueMapper.convertToUserEntity(customerRequestDto);
             log.debug("CustomerService: register New Customer request parameter {}",
-                    ValueMapper.jsonAsString(userRequestDto));
+                    ValueMapper.jsonAsString(customerRequestDto));
 
-            Customer customerResults = userRepository.save(customer);
-            userResponseDTO = ValueMapper.convertToUserDto(customerResults);
+            Customer customerResults = customerRepository.save(customer);
+            customerResponseDTO = ValueMapper.convertToUserDto(customerResults);
             log.debug("CustomerService: register new product received response from Database {}",
-                    ValueMapper.jsonAsString(userRequestDto));
+                    ValueMapper.jsonAsString(customerRequestDto));
         }catch (Exception e){
-            log.error("Exception Occurred wile persisting user to database, Exception message {}", e.getMessage());
-            throw new UserServiceBusinessException("Exception occurred wile creating a new user");
+            log.error("Exception Occurred wile persisting customer to database, Exception message {}", e.getMessage());
+            throw new CustomerServiceBusinessException("Exception occurred wile creating a new customer");
         }
 
         log.info("CustomerService:createNewUser execution ended.");
-        return userResponseDTO;
+        return customerResponseDTO;
     }
 
     @Override
-    public List<UserResponseDTO> getAllUsers() throws UserServiceBusinessException {
-        List<UserResponseDTO> userResponseDTOS = null;
+    public List<CustomerResponseDTO> getAllUsers() throws CustomerServiceBusinessException {
+        List<CustomerResponseDTO> customerResponseDTOS = null;
         try {
-            log.info("ProductService:getProducts execution started.");
+            log.info("CustomerService:getCustomer execution started.");
 
-            List<Customer> customerList = userRepository.findAll();
+            List<Customer> customerList = customerRepository.findAll();
 
             if (!customerList.isEmpty()) {
-                userResponseDTOS = customerList.stream()
+                customerResponseDTOS = customerList.stream()
                         .map(ValueMapper::convertToUserDto)
                         .collect(Collectors.toList());
             } else {
-                userResponseDTOS = Collections.emptyList();
+                customerResponseDTOS = Collections.emptyList();
             }
         }
         catch (Exception ex) {
-            log.error("Exception occurred while retrieving products from database , Exception message {}", ex.getMessage());
-            throw new UserServiceBusinessException("Exception occurred while fetch all products from Database");
+            log.error("Exception occurred while retrieving customers from database , Exception message {}", ex.getMessage());
+            throw new CustomerServiceBusinessException("Exception occurred while fetch all products from Database");
         }
 
-        log.info("ProductService:getProducts execution ended.");
-        return userResponseDTOS;
+        log.info("CustomerService:getCustomers execution ended.");
+        return customerResponseDTOS;
 
 
     }

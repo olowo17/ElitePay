@@ -17,15 +17,12 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
     @Enumerated(EnumType.STRING)
     @NotNull(message = "accounts should be SAVINGS  OR CURRENT")
     private AccountType accountType;
-
     private String accountNumber;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateOpened;

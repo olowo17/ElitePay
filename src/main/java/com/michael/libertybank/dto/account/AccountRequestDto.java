@@ -1,8 +1,14 @@
 package com.michael.libertybank.dto.account;
 
 import com.michael.libertybank.model.AccountType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-public record AccountRequestDto(Long userId, Long employeeId, AccountType accountType) {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class AccountRequestDto{
+    private Long customerId;
+    private AccountType accountType;
 }

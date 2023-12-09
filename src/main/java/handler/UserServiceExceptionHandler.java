@@ -2,8 +2,8 @@ package handler;
 
 import com.michael.libertybank.dto.APIResponse;
 import com.michael.libertybank.dto.ErrorDTO;
-import com.michael.libertybank.exception.UserNotFoundException;
-import com.michael.libertybank.exception.UserServiceBusinessException;
+import com.michael.libertybank.exception.CustomerNotFoundException;
+import com.michael.libertybank.exception.CustomerServiceBusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,16 +32,16 @@ public class UserServiceExceptionHandler {
         return serviceResponse;
     }
 
-    @ExceptionHandler(UserServiceBusinessException.class)
-    public APIResponse<?> handleServiceException(UserServiceBusinessException exception) {
+    @ExceptionHandler(CustomerServiceBusinessException.class)
+    public APIResponse<?> handleServiceException(CustomerServiceBusinessException exception) {
         APIResponse<?> serviceResponse = new APIResponse<>();
         serviceResponse.setStatus("FAILED");
         serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));
         return serviceResponse;
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public APIResponse<?> handleUserNotFoundException(UserNotFoundException exception) {
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public APIResponse<?> handleUserNotFoundException(CustomerNotFoundException exception) {
         APIResponse<?> serviceResponse = new APIResponse<>();
         serviceResponse.setStatus("FAILED");
         serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));
