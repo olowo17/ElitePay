@@ -24,12 +24,12 @@ public class CustomerService implements ICustomerService {
         CustomerResponseDTO customerResponseDTO;
         try{
             log.info("CustomerService: registerNewUser execution started");
-            Customer customer = ValueMapper.convertToUserEntity(customerRequestDto);
+            Customer customer = ValueMapper.convertToCustomerEntity(customerRequestDto);
             log.debug("CustomerService: register New Customer request parameter {}",
                     ValueMapper.jsonAsString(customerRequestDto));
 
             Customer customerResults = customerRepository.save(customer);
-            customerResponseDTO = ValueMapper.convertToUserDto(customerResults);
+            customerResponseDTO = ValueMapper.convertToCustomerDto(customerResults);
             log.debug("CustomerService: register new product received response from Database {}",
                     ValueMapper.jsonAsString(customerRequestDto));
         }catch (Exception e){
@@ -51,7 +51,7 @@ public class CustomerService implements ICustomerService {
 
             if (!customerList.isEmpty()) {
                 customerResponseDTOS = customerList.stream()
-                        .map(ValueMapper::convertToUserDto)
+                        .map(ValueMapper::convertToCustomerDto)
                         .collect(Collectors.toList());
             } else {
                 customerResponseDTOS = Collections.emptyList();

@@ -1,6 +1,7 @@
 package com.michael.libertybank.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,9 @@ public class Customer {
 
     // Explicitly include the accounts field
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Account> accounts = new ArrayList<>();
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateJoined =LocalDateTime.now();
 

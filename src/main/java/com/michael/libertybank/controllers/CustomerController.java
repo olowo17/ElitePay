@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/customers")
 @AllArgsConstructor
 @Slf4j
 public class CustomerController {
     public static final String SUCCESS = "Success";
-    private EmployeeService employeeService;
     private CustomerService customerService;
     // USERS
     @PostMapping
@@ -29,8 +28,8 @@ public class CustomerController {
         log.info("Customer Controller:: create new user request body {}", ValueMapper.jsonAsString(customerRequestDTO));
         CustomerResponseDTO customerResponseDTO = customerService.registerUser(customerRequestDTO);
 
-        APIResponse<CustomerResponseDTO> responseDto = APIResponse
-                .<CustomerResponseDTO>builder()
+        APIResponse< CustomerResponseDTO> responseDto = APIResponse
+                .< CustomerResponseDTO>builder()
                 .status(SUCCESS)
                 .results(customerResponseDTO)
                 .build();
@@ -51,7 +50,6 @@ public class CustomerController {
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
-
 
 
 }

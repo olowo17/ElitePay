@@ -5,7 +5,6 @@ import com.michael.libertybank.dto.signUp.EmployeeRequestDTO;
 import com.michael.libertybank.dto.signUp.EmployeeResponseDTO;
 import com.michael.libertybank.exception.EmployeeServiceBusinessException;
 import com.michael.libertybank.model.Employee;
-import com.michael.libertybank.repository.AccountRepository;
 import com.michael.libertybank.repository.EmployeeRepository;
 import com.michael.libertybank.repository.CustomerRepository;
 import com.michael.libertybank.util.ValueMapper;
@@ -23,7 +22,6 @@ public class EmployeeService implements  IEmployeeService{
 
     private EmployeeRepository employeeRepository;
     private CustomerRepository userRepository;
-    private AccountRepository accountRepository;
     @Override
     public EmployeeResponseDTO registerEmployee(EmployeeRequestDTO employeeSignUpRequest) throws
             EmployeeServiceBusinessException {
