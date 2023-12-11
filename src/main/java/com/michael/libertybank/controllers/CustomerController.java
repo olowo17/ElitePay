@@ -1,8 +1,8 @@
 package com.michael.libertybank.controllers;
 
 import com.michael.libertybank.dto.APIResponse;
-import com.michael.libertybank.dto.signUp.UserRequestDTO;
-import com.michael.libertybank.dto.signUp.UserResponseDTO;
+import com.michael.libertybank.dto.signUp.CustomerRequestDTO;
+import com.michael.libertybank.dto.signUp.CustomerResponseDTO;
 import com.michael.libertybank.services.CustomerService;
 import com.michael.libertybank.services.EmployeeService;
 import com.michael.libertybank.util.ValueMapper;
@@ -16,23 +16,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/customers")
 @AllArgsConstructor
 @Slf4j
 public class CustomerController {
     public static final String SUCCESS = "Success";
-    private EmployeeService employeeService;
     private CustomerService customerService;
     // USERS
     @PostMapping
-    public ResponseEntity<APIResponse> createNewUser(@RequestBody @Valid UserRequestDTO userRequestDTO) {
-        log.info("Customer Controller:: create new user request body {}", ValueMapper.jsonAsString(userRequestDTO));
-        UserResponseDTO userResponseDTO = customerService.registerUser(userRequestDTO);
+    public ResponseEntity<APIResponse> createNewUser(@RequestBody @Valid CustomerRequestDTO customerRequestDTO) {
+        log.info("Customer Controller:: create new user request body {}", ValueMapper.jsonAsString(customerRequestDTO));
+        CustomerResponseDTO customerResponseDTO = customerService.registerUser(customerRequestDTO);
 
-        APIResponse< UserResponseDTO> responseDto = APIResponse
-                .< UserResponseDTO>builder()
+        APIResponse< CustomerResponseDTO> responseDto = APIResponse
+                .< CustomerResponseDTO>builder()
                 .status(SUCCESS)
-                .results(userResponseDTO)
+                .results(customerResponseDTO)
                 .build();
         log.info("EmployeeController::createNewUser response {}", ValueMapper.jsonAsString(responseDto));
 
@@ -41,9 +40,9 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<APIResponse> getAllUsers(){
-        List<UserResponseDTO> users = customerService.getAllUsers();
-        APIResponse<List<UserResponseDTO>> responseDTO = APIResponse
-                .<List<UserResponseDTO>> builder()
+        List<CustomerResponseDTO> users = customerService.getAllUsers();
+        APIResponse<List<CustomerResponseDTO>> responseDTO = APIResponse
+                .<List<CustomerResponseDTO>> builder()
                 .status(SUCCESS)
                 .results(users)
                 .build();
@@ -51,7 +50,6 @@ public class CustomerController {
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
-
 
 
 }

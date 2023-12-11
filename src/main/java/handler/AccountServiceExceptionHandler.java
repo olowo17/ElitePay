@@ -2,8 +2,8 @@ package handler;
 
 import com.michael.libertybank.dto.APIResponse;
 import com.michael.libertybank.dto.ErrorDTO;
-import com.michael.libertybank.exception.UserNotFoundException;
-import com.michael.libertybank.exception.UserServiceBusinessException;
+import com.michael.libertybank.exception.AccountNotFoundException;
+import com.michael.libertybank.exception.AccountServiceBusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
-public class UserServiceExceptionHandler {
+public class AccountServiceExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -32,16 +32,16 @@ public class UserServiceExceptionHandler {
         return serviceResponse;
     }
 
-    @ExceptionHandler(UserServiceBusinessException.class)
-    public APIResponse<?> handleServiceException(UserServiceBusinessException exception) {
+    @ExceptionHandler(AccountServiceBusinessException.class)
+    public APIResponse<?> handleServiceException(AccountServiceBusinessException exception) {
         APIResponse<?> serviceResponse = new APIResponse<>();
         serviceResponse.setStatus("FAILED");
         serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));
         return serviceResponse;
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public APIResponse<?> handleUserNotFoundException(UserNotFoundException exception) {
+    @ExceptionHandler(AccountNotFoundException.class)
+    public APIResponse<?> handleEmployeeNotFoundException(AccountNotFoundException exception) {
         APIResponse<?> serviceResponse = new APIResponse<>();
         serviceResponse.setStatus("FAILED");
         serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));

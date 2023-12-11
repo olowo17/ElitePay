@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserResponseDTO {
+public class CustomerResponseDTO {
     private Long id;
     private String firstName;
     private String LastName;
@@ -26,7 +26,7 @@ public class UserResponseDTO {
     private String email;
     private String address;
     private Role role;
-    @JsonFormat(pattern = "YYYY-MM-DD")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateJoined =LocalDateTime.now();
-    private List<Account> accounts = new ArrayList<>();
+
 }

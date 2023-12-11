@@ -5,7 +5,6 @@ import com.michael.libertybank.dto.signUp.EmployeeRequestDTO;
 import com.michael.libertybank.dto.signUp.EmployeeResponseDTO;
 import com.michael.libertybank.exception.EmployeeServiceBusinessException;
 import com.michael.libertybank.model.Employee;
-import com.michael.libertybank.repository.AccountRepository;
 import com.michael.libertybank.repository.EmployeeRepository;
 import com.michael.libertybank.repository.CustomerRepository;
 import com.michael.libertybank.util.ValueMapper;
@@ -23,7 +22,6 @@ public class EmployeeService implements  IEmployeeService{
 
     private EmployeeRepository employeeRepository;
     private CustomerRepository userRepository;
-    private AccountRepository accountRepository;
     @Override
     public EmployeeResponseDTO registerEmployee(EmployeeRequestDTO employeeSignUpRequest) throws
             EmployeeServiceBusinessException {
@@ -40,11 +38,11 @@ public class EmployeeService implements  IEmployeeService{
             log.debug("CustomerService: register new employee received response from Database {}",
                     ValueMapper.jsonAsString(employeeSignUpRequest));
         }catch (Exception e){
-            log.error("Exception Occurred wile persisting user to database, Exception message {}", e.getMessage());
+            log.error("Exception Occurred wile persisting employee to database, Exception message {}", e.getMessage());
             throw new EmployeeServiceBusinessException("Exception occurred wile creating a new user");
         }
 
-        log.info("CustomerService:createNewUser execution ended.");
+        log.info("CustomerService:createNewEmployee execution ended.");
         return employeeResponseDto;
     }
 
@@ -52,7 +50,7 @@ public class EmployeeService implements  IEmployeeService{
     public List<EmployeeResponseDTO> getAllEmployees() throws EmployeeServiceBusinessException{
         List<EmployeeResponseDTO> employeeResponseDTOS = null;
         try {
-            log.info("ProductService:getProducts execution started.");
+            log.info("EmployeeService:getEmployee execution started.");
 
             List<Employee> employeeList = employeeRepository.findAll();
 
@@ -66,11 +64,11 @@ public class EmployeeService implements  IEmployeeService{
             }
         }
         catch (Exception ex) {
-            log.error("Exception occurred while retrieving products from database , Exception message {}", ex.getMessage());
-            throw new EmployeeServiceBusinessException("Exception occurred while fetch all products from Database");
+            log.error("Exception occurred while retrieving employees from database , Exception message {}", ex.getMessage());
+            throw new EmployeeServiceBusinessException("Exception occurred while fetch all employees from Database");
         }
 
-        log.info("ProductService:getProducts execution ended.");
+        log.info("EmployeeService:getEmployees execution ended.");
         return employeeResponseDTOS;
     }
 
