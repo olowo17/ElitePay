@@ -16,6 +16,5 @@ public interface AccountRepository extends JpaRepository <Account,Long>{
             "JOIN a.customer c")
     List<AccountDetailsResponseDTO> getAccountDetails();
 
-    @Query("SELECT a.accountNumber, a.accountType FROM Account a ")
     Optional<Account> findByAccountNumber(String accountNumber);
 }

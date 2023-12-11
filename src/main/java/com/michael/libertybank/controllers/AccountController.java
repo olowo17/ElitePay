@@ -27,14 +27,15 @@ public class AccountController {
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
-    @GetMapping("/{accountNumber}")
-    public ResponseEntity<Account> getAccountByAccountNumber(@PathVariable String accountNumber) {
+    @GetMapping("/accountNumber")
+    public ResponseEntity<Account> getAccountByAccountNumber(@RequestParam String accountNumber) {
         Optional<Account> accountOptional = accountService.getByAccountNumber(accountNumber);
-
         return accountOptional
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
 
     @PostMapping()
     public String createCustomerAccount (@RequestBody @Valid AccountRequestDto accountRequestDto){
