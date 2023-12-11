@@ -2,6 +2,7 @@ package com.michael.libertybank.repository;
 
 import com.michael.libertybank.dto.account.AccountDetailsResponseDTO;
 import com.michael.libertybank.model.Account;
+import com.michael.libertybank.model.AccountType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,6 @@ public interface AccountRepository extends JpaRepository <Account,Long>{
     List<AccountDetailsResponseDTO> getAccountDetails();
 
     Optional<Account> findByAccountNumber(String accountNumber);
+    List<Account> findByAccountType(AccountType accountType);
+
 }

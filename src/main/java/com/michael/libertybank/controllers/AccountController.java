@@ -1,6 +1,7 @@
 package com.michael.libertybank.controllers;
 import com.michael.libertybank.dto.account.AccountRequestDto;
 import com.michael.libertybank.model.Account;
+import com.michael.libertybank.model.AccountType;
 import com.michael.libertybank.repository.AccountRepository;
 import com.michael.libertybank.services.AccountService;
 import jakarta.validation.Valid;
@@ -34,6 +35,10 @@ public class AccountController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @GetMapping("/accountType")
+    public  List<Account> findByAccountType(@RequestParam AccountType accountType){
+        return accountService.findByAccountType(accountType);
+    };
 
 
 
