@@ -24,6 +24,7 @@ import java.util.List;
 public class TransactionService implements  ITransactionService{
     AccountRepository accountRepository;
     TransactionRepository transactionRepository;
+
     private Transaction createDebitTransaction(Account account,BigDecimal amount){
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionAmount(amount);
@@ -35,6 +36,13 @@ public class TransactionService implements  ITransactionService{
         newTransaction.setTransactionAmount(amount);
         newTransaction.setReceiverAccount(account);
         return  newTransaction;
+    }
+    private Transaction createTransferTransaction (Account senderAct, Account receiveAct, BigDecimal transferAmt){
+        Transaction newTransaction = new Transaction();
+        newTransaction.setSenderAccount(senderAct);
+        newTransaction.setReceiverAccount(receiveAct);
+        newTransaction.setTransactionAmount(transferAmt);
+        return newTransaction;
     }
     private void debit(String accountNumber, BigDecimal debitAmount) {
         Account accountToBeDebited = accountRepository.findByAccountNumber(accountNumber)
@@ -59,12 +67,28 @@ public class TransactionService implements  ITransactionService{
         accountRepository.save(accountToBeCredited);
     }
 
+    private void transfer(String senderActNumber, String receiverActNumber, BigDecimal amount){
+        Account senderAct = accountRepository.findByAccountNumber(senderActNumber)
+                .orElseThrow(() -> new AccountNotFoundException(" Sender Account not found"));
+
+        Account receiverAct = accountRepository.findByAccountNumber(receiverActNumber)
+                .orElseThrow(() -> new AccountNotFoundException(" Receiver Account not found"));
+
+        senderAct.setAccountBalance(senderAct.getAccountBalance().subtract(amount));
+        receiverAct.setAccountBalance(receiverAct.getAccountBalance().add(amount));
+
+        Transaction transferTransaction = createTransferTransaction(senderAct,receiverAct,amount);
+        senderAct.getSentTransactions().add(transferTransaction);
+
+        accountRepository.save(senderAct);
+        accountRepository.save(receiverAct);
+    }
+
 
     @Override
     public String transferToAnotherAcct(TransferDto transferDto) {
         try {
-            this.credit(transferDto.receiverAcctNumber(), transferDto.transactionAmt());
-            this.debit(transferDto.senderAcctNumber(), transferDto.transactionAmt());
+            this.transfer(transferDto.senderAcctNumber(),transferDto.receiverAcctNumber(),transferDto.transactionAmt());
             return String.format("Transfer of %s to %s successful", transferDto.transactionAmt(), transferDto.receiverAcctNumber());
         } catch (AccountNotFoundException | InsufficientBalanceException e) {
             return "Transfer failed: " + e.getMessage();

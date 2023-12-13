@@ -7,6 +7,7 @@ import com.michael.libertybank.model.Transaction;
 import com.michael.libertybank.services.TransactionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -15,7 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class TransactionController {
- TransactionService transactionService;
+    @Autowired
+ private TransactionService transactionService;
  @PostMapping("/deposit")
  public String deposit(@RequestBody DepositDto depositDto){
      return transactionService.deposit(depositDto);
@@ -25,7 +27,7 @@ public class TransactionController {
      return transactionService.withdraw(withdrawalDto);
  }
  @PostMapping("/transfer")
-    public String sendToAccount (@RequestBody TransferDto transferDto){
+    public String TransferToAccount (@RequestBody TransferDto transferDto){
      return transactionService.transferToAnotherAcct(transferDto);
     }
     @GetMapping
