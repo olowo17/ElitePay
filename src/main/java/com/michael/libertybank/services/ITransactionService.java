@@ -5,7 +5,6 @@ import com.michael.libertybank.dto.transaction.TransferDto;
 import com.michael.libertybank.dto.transaction.WithdrawalDto;
 import com.michael.libertybank.model.Transaction;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface ITransactionService {

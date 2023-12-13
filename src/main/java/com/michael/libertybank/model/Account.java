@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.michael.libertybank.exception.InsufficientBalanceException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -64,40 +63,3 @@ public class Account {
         return accountNumberBuilder.toString();
     }
 }
-//    public void sendMoney(String receiver, BigDecimal transactionAmount) {
-//        // verify balance
-//        if (accountBalance.compareTo(transactionAmount) < 0) {
-//            throw new InsufficientBalanceException("Insufficient balance in your account.");
-//        }
-//
-//        // Updating sender's balance
-//        this.accountBalance = this.accountBalance.subtract(transactionAmount);
-//
-//        // Updating receiver's balance
-//        receiver.receiveMoney(transactionAmount);
-//
-//        // Create and record the transaction
-//        Transaction transaction = new Transaction();
-//        transaction.setTransactionDate(LocalDateTime.now());
-//        transaction.setSenderAccountNumber(this);
-//        transaction.setReceiverAccountNumber(receiver);
-//        transaction.setTransactionAmount(transactionAmount);
-//        // Add the transaction to the list of transactions
-//        this.transactions.add(transaction);
-//    }
-//
-//    public void receiveMoney(BigDecimal transactionAmount) {
-//        // Update receiver's balance
-//        this.accountBalance = this.accountBalance.add(transactionAmount);
-//
-//        // Create and record the transaction
-//        Transaction transaction = new Transaction();
-//        transaction.setTransactionDate(LocalDateTime.now());
-//        transaction.setSenderAccountNumber(null); // This will later be updated by the sender
-//        transaction.setReceiverAccountNumber(this);
-//        transaction.setTransactionAmount(transactionAmount);
-//        // Add the transaction to the list of transactions
-//        this.transactions.add(transaction);
-//    }
-
-
