@@ -1,9 +1,9 @@
-package handler;
+package com.michael.libertybank.handler;
 
 import com.michael.libertybank.dto.APIResponse;
 import com.michael.libertybank.dto.ErrorDTO;
-import com.michael.libertybank.exception.AccountNotFoundException;
-import com.michael.libertybank.exception.AccountServiceBusinessException;
+import com.michael.libertybank.exception.EmployeeNotFoundException;
+import com.michael.libertybank.exception.EmployeeServiceBusinessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
-public class AccountServiceExceptionHandler {
+public class EmployeeServiceExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -32,16 +32,16 @@ public class AccountServiceExceptionHandler {
         return serviceResponse;
     }
 
-    @ExceptionHandler(AccountServiceBusinessException.class)
-    public APIResponse<?> handleServiceException(AccountServiceBusinessException exception) {
+    @ExceptionHandler(EmployeeServiceBusinessException.class)
+    public APIResponse<?> handleServiceException(EmployeeServiceBusinessException exception) {
         APIResponse<?> serviceResponse = new APIResponse<>();
         serviceResponse.setStatus("FAILED");
         serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));
         return serviceResponse;
     }
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    public APIResponse<?> handleEmployeeNotFoundException(AccountNotFoundException exception) {
+    @ExceptionHandler(EmployeeNotFoundException.class)
+    public APIResponse<?> handleEmployeeNotFoundException(EmployeeNotFoundException exception) {
         APIResponse<?> serviceResponse = new APIResponse<>();
         serviceResponse.setStatus("FAILED");
         serviceResponse.setErrors(Collections.singletonList(new ErrorDTO("", exception.getMessage())));
