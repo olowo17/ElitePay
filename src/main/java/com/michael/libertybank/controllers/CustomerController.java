@@ -4,7 +4,6 @@ import com.michael.libertybank.dto.APIResponse;
 import com.michael.libertybank.dto.signUp.CustomerRequestDTO;
 import com.michael.libertybank.dto.signUp.CustomerResponseDTO;
 import com.michael.libertybank.services.CustomerService;
-import com.michael.libertybank.services.EmployeeService;
 import com.michael.libertybank.util.ValueMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

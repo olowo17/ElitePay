@@ -4,6 +4,7 @@ import com.michael.libertybank.dto.account.AccountRequestDto;
 import com.michael.libertybank.exception.AccountServiceBusinessException;
 import com.michael.libertybank.exception.EmployeeNotFoundException;
 import com.michael.libertybank.model.Account;
+import com.michael.libertybank.model.AccountType;
 import com.michael.libertybank.repository.AccountRepository;
 import com.michael.libertybank.repository.EmployeeRepository;
 import com.michael.libertybank.repository.CustomerRepository;
@@ -27,6 +28,11 @@ public class AccountService implements IAccountService{
     private final ModelMapper modelMapper = new ModelMapper();
     private AccountDetailsResponseDTO convertToAccountResponse (Account account){
         return modelMapper.map(account,AccountDetailsResponseDTO.class);
+    }
+
+    @Override
+    public List<Account> findByAccountType(AccountType accountType) {
+        return accountRepository.findByAccountType(accountType);
     }
 
     @Override

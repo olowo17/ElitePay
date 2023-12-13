@@ -1,5 +1,6 @@
 package com.michael.libertybank.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -8,7 +9,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Data
@@ -19,25 +23,36 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String accountNumber;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     @JsonManagedReference
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
-    @NotNull(message = "accounts should be SAVINGS  OR CURRENT")
+    @NotNull(message = "accounts should be SAVINGS OR CURRENT")
     private AccountType accountType;
 
-    private String accountNumber;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateOpened;
 
-    // Define a static Random object
+    private BigDecimal accountBalance;
+
+    @OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<Transaction> sentTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiverAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<Transaction> receivedTransactions = new ArrayList<>();
+
     private static final Random random = new Random();
 
     public Account() {
         this.accountNumber = generateAccountNumber();
         this.dateOpened = LocalDateTime.now();
+        this.accountBalance = BigDecimal.ZERO;
     }
 
     private String generateAccountNumber() {

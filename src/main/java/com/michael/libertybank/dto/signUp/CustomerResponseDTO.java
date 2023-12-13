@@ -2,16 +2,12 @@ package com.michael.libertybank.dto.signUp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.michael.libertybank.model.Account;
 import com.michael.libertybank.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @Data
