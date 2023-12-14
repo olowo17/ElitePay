@@ -24,6 +24,7 @@ public class Account {
     private Long id;
 
     private String accountNumber;
+    private  String accountHolder;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
