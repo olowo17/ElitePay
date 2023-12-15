@@ -21,7 +21,7 @@ import java.util.List;
 public class CustomerController {
     public static final String SUCCESS = "Success";
     private CustomerService customerService;
-    // USERS
+
     @PostMapping
     public ResponseEntity<APIResponse> createNewUser(@RequestBody @Valid CustomerRequestDTO customerRequestDTO) {
         log.info("Customer Controller:: create new user request body {}", ValueMapper.jsonAsString(customerRequestDTO));

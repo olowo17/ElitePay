@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AccountService implements IAccountService{
     private EmployeeRepository employeeRepository;
-    private CustomerRepository userRepository;
-    private final AccountRepository accountRepository;
+    private CustomerRepository customerRepository;
+    private AccountRepository accountRepository;
     private final ModelMapper modelMapper = new ModelMapper();
     private AccountDetailsResponseDTO convertToAccountResponse (Account account){
         return modelMapper.map(account,AccountDetailsResponseDTO.class);
@@ -37,23 +37,29 @@ public class AccountService implements IAccountService{
 
     @Override
     public Optional<Account> getByAccountNumber(String accountNumber) {
-        return accountRepository.findByAccountNumber(accountNumber);
+        return accountRepository.findAccountByAccountNumber(accountNumber);
     }
 
     @Override
     public String createAccountNumber(AccountRequestDto accountRequestDto) {
         Account newAccount = new Account();
         var customerId = accountRequestDto.customerId();
-        var getCustomerFromRepository = userRepository.findById(customerId)
+        var accountHolder = customerRepository.getCustomerFullName(customerId);
+        var fullName = accountHolder.firstName() + " " + accountHolder.lastName();
+
+        var getCustomerFromRepository = customerRepository.findById(customerId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Customer not found"));
         newAccount.setCustomer(getCustomerFromRepository);
 
         newAccount.setAccountType(accountRequestDto.accountType());
+
+        newAccount.setAccountHolder(fullName);
+
         accountRepository.save(newAccount);
 
 
         return "Account number : " + newAccount.getAccountNumber() + " has been created for "
-                + getCustomerFromRepository.getFirstName() + " " + getCustomerFromRepository.getLastName();
+                + fullName;
 
     }
 

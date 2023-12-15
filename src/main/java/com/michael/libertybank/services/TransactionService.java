@@ -26,7 +26,7 @@ public class TransactionService implements  ITransactionService{
     CustomerRepository customerRepository;
 
     private Account findAccount (String accountNumber, String msg){
-        return accountRepository.findByAccountNumber(accountNumber)
+        return accountRepository.findAccountByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(msg));
     }
 
@@ -35,12 +35,16 @@ public class TransactionService implements  ITransactionService{
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionAmount(amount);
         newTransaction.setSenderAccount(account);
+        newTransaction.setSenderAccountNumber(account.getAccountNumber());
+        newTransaction.setSenderFullName(account.getAccountHolder());
         return  newTransaction;
     }
     private Transaction createCreditTransaction(Account account,BigDecimal amount){
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionAmount(amount);
         newTransaction.setReceiverAccount(account);
+        newTransaction.setReceiverFullName(account.getAccountHolder());
+        newTransaction.setReceiverAccountNumber(account.getAccountNumber());
         return  newTransaction;
     }
     private Transaction createTransferTransaction (Account senderAct, Account receiveAct, BigDecimal transferAmt){
@@ -48,8 +52,14 @@ public class TransactionService implements  ITransactionService{
         newTransaction.setSenderAccount(senderAct);
         newTransaction.setReceiverAccount(receiveAct);
         newTransaction.setTransactionAmount(transferAmt);
+        newTransaction.setSenderFullName(senderAct.getAccountHolder());
+        newTransaction.setReceiverFullName(receiveAct.getAccountHolder());
+        newTransaction.setReceiverAccountNumber(receiveAct.getAccountNumber());
+        newTransaction.setSenderAccountNumber(senderAct.getAccountNumber());
         return newTransaction;
     }
+
+    // Reconcile the account balance for debit
     private void debit(String accountNumber, BigDecimal debitAmount) {
         var accountToBeDebited = findAccount(accountNumber," Debit Account not found" );
         if (accountToBeDebited.getAccountBalance().compareTo(debitAmount) < 0) {
@@ -61,6 +71,7 @@ public class TransactionService implements  ITransactionService{
         accountToBeDebited.getSentTransactions().add(debitTransaction);
         accountRepository.save(accountToBeDebited);
     }
+    // Reconcile the account balance for credit
     private void credit(String accountNumber, BigDecimal creditAmount) {
         var accountToBeCredited = findAccount(accountNumber," Destination Account not found" );
         accountToBeCredited.setAccountBalance(accountToBeCredited.getAccountBalance().add(creditAmount));
@@ -68,7 +79,7 @@ public class TransactionService implements  ITransactionService{
         accountToBeCredited.getReceivedTransactions().add(creditTransaction);
         accountRepository.save(accountToBeCredited);
     }
-
+    // Reconcile the account balance for inter account transfers
     private void transfer(String senderActNumber, String receiverActNumber, BigDecimal amount){
         var senderAct = findAccount(senderActNumber," Sender Account not found" );
         var receiverAct = findAccount(receiverActNumber," Sender Account not found" );
@@ -87,7 +98,7 @@ public class TransactionService implements  ITransactionService{
     public String transferToAnotherAcct(TransferDto transferDto) {
         try {
             this.transfer(transferDto.senderAcctNumber(),transferDto.receiverAcctNumber(),transferDto.transactionAmt());
-//            customerRepository.getCustomerFullName()
+//            var beneficiary =accountRepository.getCustomerFullName(transferDto.receiverAcctNumber())
             return String.format("Transfer of %s to %s successful", transferDto.transactionAmt(), transferDto.receiverAcctNumber());
         } catch (AccountNotFoundException | InsufficientBalanceException e) {
             return "Transfer failed: " + e.getMessage();

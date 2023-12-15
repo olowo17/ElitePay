@@ -27,6 +27,11 @@ public class Transaction {
     @JsonManagedReference
     private Account senderAccount;
 
+    private String senderAccountNumber;
+    private String receiverAccountNumber;
+    private String senderFullName;
+    private String receiverFullName;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "receiver_account_id")
     @JsonManagedReference

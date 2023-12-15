@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.michael.libertybank.dto.FullNameDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class Account {
     private Long id;
 
     private String accountNumber;
-    private  String accountHolder;
+    private String accountHolder;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
@@ -54,6 +55,7 @@ public class Account {
         this.accountNumber = generateAccountNumber();
         this.dateOpened = LocalDateTime.now();
         this.accountBalance = BigDecimal.ZERO;
+
     }
 
     private String generateAccountNumber() {
@@ -63,4 +65,5 @@ public class Account {
         }
         return accountNumberBuilder.toString();
     }
+
 }

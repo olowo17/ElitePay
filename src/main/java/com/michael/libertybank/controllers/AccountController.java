@@ -21,9 +21,7 @@ import java.util.Optional;
 @Data
 public class AccountController {
     private final AccountService accountService;
-    AccountRepository accountRepository;
-
-
+    private final AccountRepository accountRepository;
     @GetMapping()
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
@@ -38,10 +36,7 @@ public class AccountController {
     @GetMapping("/accountType")
     public  List<Account> findByAccountType(@RequestParam AccountType accountType){
         return accountService.findByAccountType(accountType);
-    };
-
-
-
+    }
     @PostMapping()
     public String createCustomerAccount (@RequestBody @Valid AccountRequestDto accountRequestDto){
        return accountService.createAccountNumber(accountRequestDto);
