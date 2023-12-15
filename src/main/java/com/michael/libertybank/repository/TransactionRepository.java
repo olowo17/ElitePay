@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
-//    public Page<Transaction> findAll (Pageable pageable);
+
     Optional<Transaction> findByTransactionId(String transactionId);
 
     @Query("SELECT t FROM Transaction t " +

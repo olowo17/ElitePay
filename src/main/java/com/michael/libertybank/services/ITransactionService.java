@@ -5,8 +5,6 @@ import com.michael.libertybank.dto.transaction.TransferDto;
 import com.michael.libertybank.dto.transaction.WithdrawalDto;
 import com.michael.libertybank.model.Transaction;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 
 public interface ITransactionService {
