@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.Random;
 
 
@@ -27,6 +28,12 @@ public class Transaction {
     @JsonManagedReference
     private Account senderAccount;
 
+    private String senderAccountNumber;
+    private String receiverAccountNumber;
+    private String senderFullName;
+    private String receiverFullName;
+    private Currency currency;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "receiver_account_id")
     @JsonManagedReference
@@ -37,6 +44,7 @@ public class Transaction {
     public Transaction() {
         this.transactionId = generateTransactionId();
         this.transactionDate = LocalDateTime.now();
+        this.currency = Currency.getInstance("NGN");
     }
 
     private static final Random random = new Random();

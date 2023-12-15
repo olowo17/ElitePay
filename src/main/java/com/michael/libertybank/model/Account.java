@@ -24,6 +24,7 @@ public class Account {
     private Long id;
 
     private String accountNumber;
+    private String accountHolder;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
@@ -53,6 +54,7 @@ public class Account {
         this.accountNumber = generateAccountNumber();
         this.dateOpened = LocalDateTime.now();
         this.accountBalance = BigDecimal.ZERO;
+
     }
 
     private String generateAccountNumber() {
@@ -62,4 +64,5 @@ public class Account {
         }
         return accountNumberBuilder.toString();
     }
+
 }

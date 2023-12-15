@@ -11,6 +11,7 @@ import com.michael.libertybank.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
@@ -23,59 +24,64 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AccountService implements IAccountService{
     private EmployeeRepository employeeRepository;
-    private CustomerRepository userRepository;
-    private final AccountRepository accountRepository;
+    private CustomerRepository customerRepository;
+    private AccountRepository accountRepository;
     private final ModelMapper modelMapper = new ModelMapper();
     private AccountDetailsResponseDTO convertToAccountResponse (Account account){
         return modelMapper.map(account,AccountDetailsResponseDTO.class);
     }
 
     @Override
-    public List<Account> findByAccountType(AccountType accountType) {
-        return accountRepository.findByAccountType(accountType);
+    public Page<Account> findByAccountType(AccountType accountType, Pageable pageable) {
+        return accountRepository.findByAccountType(accountType,pageable);
     }
 
     @Override
     public Optional<Account> getByAccountNumber(String accountNumber) {
-        return accountRepository.findByAccountNumber(accountNumber);
+        return accountRepository.findAccountByAccountNumber(accountNumber);
     }
 
     @Override
     public String createAccountNumber(AccountRequestDto accountRequestDto) {
         Account newAccount = new Account();
         var customerId = accountRequestDto.customerId();
-        var getCustomerFromRepository = userRepository.findById(customerId)
+        var accountHolder = customerRepository.getCustomerFullName(customerId);
+        var fullName = accountHolder.firstName() + " " + accountHolder.lastName();
+
+        var getCustomerFromRepository = customerRepository.findById(customerId)
                 .orElseThrow(() -> new EmployeeNotFoundException("Customer not found"));
         newAccount.setCustomer(getCustomerFromRepository);
 
         newAccount.setAccountType(accountRequestDto.accountType());
+
+        newAccount.setAccountHolder(fullName);
+
         accountRepository.save(newAccount);
 
 
         return "Account number : " + newAccount.getAccountNumber() + " has been created for "
-                + getCustomerFromRepository.getFirstName() + " " + getCustomerFromRepository.getLastName();
+                + fullName;
 
     }
 
     @Override
-    public List<AccountDetailsResponseDTO> getAllAccounts() {
-       List <AccountDetailsResponseDTO>  accountDetailsResponseDTOs = null;
+    public Page<AccountDetailsResponseDTO> getAllAccounts(int pageNo, int recordSize) {
+        List<AccountDetailsResponseDTO> accountDetailsResponseDTOs = null;
+        Pageable pageable = PageRequest.of(pageNo, recordSize, Sort.by("accountHolder"));
 
-        try{
-            List<Account> accountList = accountRepository.findAll();
-            if (!accountList.isEmpty()){
-                accountDetailsResponseDTOs=accountList.stream()
-                        .map(this::convertToAccountResponse).collect(Collectors.toList());
-            }
-            else {
+        try {
+            Page<Account> accountList = accountRepository.findAll(pageable);
+            if (!accountList.isEmpty()) {
+                accountDetailsResponseDTOs = accountList.map(this::convertToAccountResponse).getContent();
+            } else {
                 accountDetailsResponseDTOs = Collections.emptyList();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Exception occurred while retrieving accounts from database , Exception message : {}", ex.getMessage());
             throw new AccountServiceBusinessException("Exception occurred while fetch all products from Database");
         }
-        return accountDetailsResponseDTOs;
+        return new PageImpl<>(accountDetailsResponseDTOs, pageable, accountDetailsResponseDTOs.size());
+    }
 
-}
 
 }
