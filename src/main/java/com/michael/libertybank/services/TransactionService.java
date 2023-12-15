@@ -12,6 +12,9 @@ import com.michael.libertybank.repository.CustomerRepository;
 import com.michael.libertybank.repository.TransactionRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -134,8 +137,9 @@ public class TransactionService implements  ITransactionService{
     }
 
     @Override
-    public List<Transaction> getAllTransaction() {
-        return transactionRepository.findAll();
+    public Page <Transaction> getAllTransaction(int pageNo, int recordCount) {
+        Pageable pageable = PageRequest.of(pageNo, recordCount);
+        return transactionRepository.findAll(pageable);
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.michael.libertybank.util.ValueMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +40,15 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse> getAllUsers(){
-        List<CustomerResponseDTO> users = customerService.getAllUsers();
-        APIResponse<List<CustomerResponseDTO>> responseDTO = APIResponse
-                .<List<CustomerResponseDTO>> builder()
+    public ResponseEntity<APIResponse<Page<CustomerResponseDTO>>> getAllUsers(Pageable pageable) {
+        Page<CustomerResponseDTO> usersPage = customerService.getAllUsers(pageable);
+
+        APIResponse<Page<CustomerResponseDTO>> responseDTO = APIResponse
+                .<Page<CustomerResponseDTO>>builder()
                 .status(SUCCESS)
-                .results(users)
+                .results(usersPage)
                 .build();
+
         log.info("CustomerController::getUsers response {}", ValueMapper.jsonAsString(responseDTO));
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);

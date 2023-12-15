@@ -9,6 +9,8 @@ import com.michael.libertybank.repository.CustomerRepository;
 import com.michael.libertybank.services.TransactionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -31,9 +33,9 @@ public class TransactionController {
     public String transferToAccount (@RequestBody TransferDto transferDto){
      return transactionService.transferToAnotherAcct(transferDto);
     }
-    @GetMapping
-    public List<Transaction> getTransactions (){
-     return transactionService.getAllTransaction();
+    @GetMapping("/{pageNo}/{recordCount}")
+    public Page<Transaction> getTransactions (@PathVariable int pageNo, @PathVariable int recordCount){
+     return transactionService.getAllTransaction(pageNo,recordCount);
     }
     @GetMapping("/receipt/{transactionId}")
     public Transaction getTransactionReceipt(@PathVariable String transactionId){

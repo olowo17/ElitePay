@@ -11,6 +11,7 @@ import com.michael.libertybank.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +32,8 @@ public class AccountService implements IAccountService{
     }
 
     @Override
-    public List<Account> findByAccountType(AccountType accountType) {
-        return accountRepository.findByAccountType(accountType);
+    public Page<Account> findByAccountType(AccountType accountType, Pageable pageable) {
+        return accountRepository.findByAccountType(accountType,pageable);
     }
 
     @Override
@@ -64,24 +65,23 @@ public class AccountService implements IAccountService{
     }
 
     @Override
-    public List<AccountDetailsResponseDTO> getAllAccounts() {
-       List <AccountDetailsResponseDTO>  accountDetailsResponseDTOs = null;
+    public Page<AccountDetailsResponseDTO> getAllAccounts(int pageNo, int recordSize) {
+        List<AccountDetailsResponseDTO> accountDetailsResponseDTOs = null;
+        Pageable pageable = PageRequest.of(pageNo, recordSize, Sort.by("accountHolder"));
 
-        try{
-            List<Account> accountList = accountRepository.findAll();
-            if (!accountList.isEmpty()){
-                accountDetailsResponseDTOs=accountList.stream()
-                        .map(this::convertToAccountResponse).collect(Collectors.toList());
-            }
-            else {
+        try {
+            Page<Account> accountList = accountRepository.findAll(pageable);
+            if (!accountList.isEmpty()) {
+                accountDetailsResponseDTOs = accountList.map(this::convertToAccountResponse).getContent();
+            } else {
                 accountDetailsResponseDTOs = Collections.emptyList();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             log.error("Exception occurred while retrieving accounts from database , Exception message : {}", ex.getMessage());
             throw new AccountServiceBusinessException("Exception occurred while fetch all products from Database");
         }
-        return accountDetailsResponseDTOs;
+        return new PageImpl<>(accountDetailsResponseDTOs, pageable, accountDetailsResponseDTOs.size());
+    }
 
-}
 
 }
