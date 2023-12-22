@@ -1,12 +1,10 @@
 package com.michael.libertybank.services;
 
 import com.michael.libertybank.exception.AccountNotFoundException;
-import com.michael.libertybank.model.Account;
 import com.michael.libertybank.repository.AccountRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class AdminService implements IAdminService{

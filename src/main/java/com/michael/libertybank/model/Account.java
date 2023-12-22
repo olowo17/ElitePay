@@ -27,9 +27,9 @@ public class Account {
     private String accountHolder;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     @JsonManagedReference
-    private Customer customer;
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "accounts should be SAVINGS OR CURRENT")

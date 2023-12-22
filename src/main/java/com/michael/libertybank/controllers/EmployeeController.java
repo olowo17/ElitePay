@@ -1,14 +1,16 @@
 package com.michael.libertybank.controllers;
 
 import com.michael.libertybank.dto.APIResponse;
-import com.michael.libertybank.dto.signUp.EmployeeRequestDTO;
-import com.michael.libertybank.dto.signUp.EmployeeResponseDTO;
-import com.michael.libertybank.services.CustomerService;
-import com.michael.libertybank.services.EmployeeService;
-import com.michael.libertybank.util.ValueMapper;
-import jakarta.validation.Valid;
+import com.michael.libertybank.dto.signUp.SignUpResponseDTO;
+import com.michael.libertybank.exception.CustomerNotFoundException;
+import com.michael.libertybank.model.Role;
+import com.michael.libertybank.model.User;
+import com.michael.libertybank.services.UserService;
+import com.michael.libertybank.util.Converter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,35 +23,29 @@ import java.util.List;
 @Slf4j
 public class EmployeeController {
     public static final String SUCCESS = "Success";
-    private EmployeeService employeeService;
-    private CustomerService customerService;
-
-     // EMPLOYEES
-    @PostMapping
-    public ResponseEntity<APIResponse<EmployeeResponseDTO>> createNewEmployee(@RequestBody @Valid EmployeeRequestDTO employeeRequest) {
-        log.info("Employee Controller:: create new employee request body {}", ValueMapper.jsonAsString(employeeRequest));
-        EmployeeResponseDTO employeeResponse = employeeService.registerEmployee(employeeRequest);
-        APIResponse<EmployeeResponseDTO> responseDto = APIResponse
-                .<EmployeeResponseDTO>builder()
-                .status(SUCCESS)
-                .results(employeeResponse)
-                .build();
-        log.info("EmployeeController::createNewUser response {}", ValueMapper.jsonAsString(responseDto));
-
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-    }
-
+    private UserService userService;
     @GetMapping
-    public ResponseEntity<APIResponse> getAllUsers(){
+    public ResponseEntity<APIResponse<Page<SignUpResponseDTO>>> getAllUsers(Pageable pageable) {
+        Page<SignUpResponseDTO> usersPage = userService.getAllUsers(pageable);
 
-        List<EmployeeResponseDTO> employees = employeeService.getAllEmployees();
-        APIResponse<List<EmployeeResponseDTO>> responseDTO = APIResponse
-                .<List<EmployeeResponseDTO>> builder()
+        APIResponse<Page<SignUpResponseDTO>> responseDTO = APIResponse
+                .<Page<SignUpResponseDTO>>builder()
                 .status(SUCCESS)
-                .results(employees)
+                .results(usersPage)
                 .build();
-        log.info("CustomerController::getUsers response {}", ValueMapper.jsonAsString(responseDTO));
+
+        log.info("CustomerController::getUsers response {}", Converter.jsonAsString(responseDTO));
 
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/role")
+    public List<User> getByRole (@RequestParam Role role){
+        return userService.getUsersByRole(role);
+    }
+
+    @GetMapping("/email")
+    public User getByEmail(@RequestParam String email, Role role){
+        return userService.getUserByEmail(email);
     }
 }
