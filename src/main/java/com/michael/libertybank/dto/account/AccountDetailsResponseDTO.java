@@ -2,7 +2,7 @@ package com.michael.libertybank.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.michael.libertybank.model.AccountType;
-import com.michael.libertybank.model.Customer;
+import com.michael.libertybank.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,6 @@ public class AccountDetailsResponseDTO {
     private String accountNumber;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateOpened;
-    private Customer customer;
+    private User user;
 
 }

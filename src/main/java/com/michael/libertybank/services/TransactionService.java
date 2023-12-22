@@ -1,5 +1,6 @@
 package com.michael.libertybank.services;
 import com.michael.libertybank.dto.transaction.DepositDto;
+import com.michael.libertybank.dto.transaction.TransactionDetails;
 import com.michael.libertybank.dto.transaction.TransferDto;
 import com.michael.libertybank.dto.transaction.WithdrawalDto;
 import com.michael.libertybank.exception.AccountNotFoundException;
@@ -8,7 +9,7 @@ import com.michael.libertybank.exception.TransactionNotFoundException;
 import com.michael.libertybank.model.Account;
 import com.michael.libertybank.model.Transaction;
 import com.michael.libertybank.repository.AccountRepository;
-import com.michael.libertybank.repository.CustomerRepository;
+import com.michael.libertybank.repository.UserRepository;
 import com.michael.libertybank.repository.TransactionRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,13 +28,12 @@ import java.util.List;
 public class TransactionService implements  ITransactionService{
     AccountRepository accountRepository;
     TransactionRepository transactionRepository;
-    CustomerRepository customerRepository;
+    UserRepository userRepository;
 
     private Account findAccount (String accountNumber, String msg){
         return accountRepository.findAccountByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(msg));
     }
-
 
     private Transaction createDebitTransaction(Account account,BigDecimal amount){
         Transaction newTransaction = new Transaction();
@@ -131,9 +132,18 @@ public class TransactionService implements  ITransactionService{
     }
 
     @Override
-    public Transaction generateTransactionReceipt(String transactionId) {
-        return transactionRepository.findByTransactionId(transactionId).
+    public TransactionDetails generateTransactionReceipt(String transactionId) {
+        TransactionDetails transactionDetails = new TransactionDetails();
+        var transaction= transactionRepository.findByTransactionId(transactionId).
                 orElseThrow(()->new TransactionNotFoundException(" Transaction Not Found"));
+        transactionDetails.setTransactionId(transaction.getTransactionId());
+        transactionDetails.setTransactionDate(transaction.getTransactionDate());
+        transactionDetails.setTransactionCurrency(transaction.getCurrency());
+        transactionDetails.setTransactionAmount(transaction.getTransactionAmount());
+        transactionDetails.setSenderFullName(transaction.getSenderFullName());
+        transactionDetails.setReceiverFullName(transaction.getReceiverFullName());
+        return transactionDetails;
+
     }
 
     @Override
@@ -145,5 +155,19 @@ public class TransactionService implements  ITransactionService{
     @Override
     public List<Transaction> findByAccountNumber(String accountNumber) {
         return transactionRepository.findBySenderOrReceiverAccountNumber(accountNumber);
+    }
+
+
+    @Override
+    public Page<Transaction> getTransactionsByDate(
+            String accountNumber,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            int page,
+            int size) {
+
+        PageRequest pageable = PageRequest.of(page, size);
+        return transactionRepository.findBySenderOrReceiverAccountNumberAndDate(
+                accountNumber, startDate, endDate, pageable);
     }
 }

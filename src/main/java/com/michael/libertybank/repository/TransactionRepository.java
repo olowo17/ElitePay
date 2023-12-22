@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     @Query("SELECT t FROM Transaction t " +
             "WHERE t.senderAccount.id = :accountId OR t.receiverAccount.id = :accountId")
     List<Transaction> findBySenderOrReceiverAccountId(@Param("accountId") Long accountId);
+
+    @Query("SELECT t FROM Transaction t " +
+            "WHERE (t.senderAccount.accountNumber = :accountNumber OR t.receiverAccount.accountNumber = :accountNumber) " +
+            "AND t.transactionDate BETWEEN :startDate AND :endDate")
+    Page<Transaction> findBySenderOrReceiverAccountNumberAndDate(
+            @Param("accountNumber") String accountNumber,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
 }
