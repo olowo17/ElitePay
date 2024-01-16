@@ -2,24 +2,16 @@ package com.michael.libertybank.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Getter
-@ToString
-@JsonPropertyOrder(value = {"timeStamp", "message", "path", "errorCode", "infoLink", "details"})
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ApiError {
-
-    @JsonFormat(pattern = "YYYY-MM-dd HH:mm:ss")
-    private LocalDateTime timeStamp;
 
     @JsonIgnore
     private int status;
@@ -28,13 +20,14 @@ public class ApiError {
 
     private String path;
 
-    @Setter
     private String errorCode;
 
-    @Setter
     private String infoLink;
 
-    private List<Object> details = new ArrayList<>();
+    private Object details;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime timeStamp;
 
     public ApiError(final int status, final String message, final String path, final ErrorCode errorCode) {
         timeStamp = LocalDateTime.now();
@@ -44,12 +37,34 @@ public class ApiError {
         this.errorCode = (errorCode != null) ? errorCode.toString() : null;
     }
 
-    public ApiError(final int status, final String message, final String path) {
+
+    public ApiError(final int status, final String message, final String path, final String errorCode) {
+        timeStamp = LocalDateTime.now();
         this.status = status;
         this.message = message;
         this.path = path;
-        this.errorCode = status >= 400 && status < 500 ? ErrorCode.INVALID_INPUT_PROVIDED.name() : null;
+        this.errorCode = errorCode;
+    }
+
+
+    public ApiError(final int status, final String message, final String path) {
         timeStamp = LocalDateTime.now();
+        this.status = status;
+        this.message = message;
+        this.path = path;
+    }
+
+
+    public ApiError(final String message, final Object details) {
+        timeStamp = LocalDateTime.now();
+        this.message = message;
+        this.details = details;
+    }
+
+    public ApiError(final String message, final Object details, final String errorCode) {
+        timeStamp = LocalDateTime.now();
+        this.message = message;
+        this.details = details;
+        this.errorCode = errorCode;
     }
 }
-
