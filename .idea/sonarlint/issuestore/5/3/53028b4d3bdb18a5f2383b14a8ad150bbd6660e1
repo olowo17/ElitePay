@@ -1,0 +1,19 @@
+
+a
+java:S1192,"FDefine a constant instead of duplicating this literal "ADMIN" 3 times.(”í³ñıÿÿÿÿ
+—
+java:S1186g"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(×ğÖ©
+]
+java:S5738)"HRemove this call to a deprecated method, it has been marked for removal.(ßÒ£E
+T
+java:S1874*"9Remove this use of "authorizeRequests"; it is deprecated.(¿Ğ±ûÿÿÿÿ
+c
+java:S57386"HRemove this call to a deprecated method, it has been marked for removal.(ÛüïÓıÿÿÿÿ
+c
+java:S57389"HRemove this call to a deprecated method, it has been marked for removal.(Åúßµûÿÿÿÿ
+^
+java:S5738:"HRemove this call to a deprecated method, it has been marked for removal.(éå×¦
+c
+java:S5738@"HRemove this call to a deprecated method, it has been marked for removal.(Åúßµûÿÿÿÿ
+d
+java:S1172g"NRemove this unused method parameter "httpSecuritySessionManagementConfigurer".(×ğÖ©
