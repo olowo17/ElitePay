@@ -39,7 +39,10 @@ public class AccountController {
     }
 
     @GetMapping("/records")
-    public Page<AccountDetailsResponseDTO> getAllAccounts(@RequestParam int pageNo, @RequestParam int recordSize) {
+    public Page<AccountDetailsResponseDTO> getAllAccounts(
+            @RequestParam (value = "pageNo", defaultValue = "0") int pageNo,
+            @RequestParam (value = "recordSize", defaultValue = "10") int recordSize) {
+
         return accountService.getAllAccounts(pageNo,recordSize);
     }
     @GetMapping("/accountNumber")

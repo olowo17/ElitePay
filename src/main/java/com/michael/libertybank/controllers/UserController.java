@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     public static final String SUCCESS = "Success";
     private UserService customerService;
-    private UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<APIResponse> createNewUser(@RequestBody @Valid SignUpRequestDTO signUpRequestDTO) {

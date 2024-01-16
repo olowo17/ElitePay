@@ -38,8 +38,10 @@ public class TransactionController {
     public String transferToAccount (@RequestBody TransferDto transferDto){
      return transactionService.transferToAnotherAcct(transferDto);
     }
-    @GetMapping("/{pageNo}/{recordCount}")
-    public Page<Transaction> getTransactions (@PathVariable int pageNo, @PathVariable int recordCount){
+    @GetMapping("/records")
+    public Page<Transaction> getTransactions (
+            @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+            @RequestParam(value = "recordCount", defaultValue = "10") int recordCount){
      return transactionService.getAllTransaction(pageNo,recordCount);
     }
     @GetMapping("/receipt/{transactionId}")
