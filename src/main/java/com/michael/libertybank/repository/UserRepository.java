@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public interface UserRepository extends JpaRepository <User,Long> {
+public interface  UserRepository extends JpaRepository <User,Long> {
     Optional<User> findUserByEmailAndRole(String email, Role role);
     List<User> findByRole(Role role);
     Optional<User> findCustomerByEmail(String email);

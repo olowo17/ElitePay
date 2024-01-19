@@ -4,6 +4,7 @@ package com.michael.libertybank.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,13 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String password;
+
     @Column(unique = true)
     private String phoneNumber;
-    @Column(unique = true)
+
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
+
     private String address;
     @Enumerated(EnumType.STRING)
     private Role role;

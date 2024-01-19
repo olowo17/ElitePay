@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class LoginService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
-
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Transactional
     public AuthenticationResponse loginUser(LoginRequest loginRequest) {
         try {
@@ -39,54 +40,24 @@ public class LoginService {
                     ));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            User user = userRepository.findUserByEmailAndRole(loginRequest.getEmail(), Role.USER)
+            User user = userRepository.findCustomerByEmail(loginRequest.getEmail())
                     .orElseThrow(()-> new CustomerNotFoundException( " customer Not found"));
 
             var userToken = jwtService.generateJwtToken(user);
             var name = user.getFirstName() + " " + user.getLastName();
-            return new AuthenticationResponse(userToken, name, user.getRole());
+            var email = user.getEmail();
+            var phoneNumber = user.getPhoneNumber();
+            var id = user.getId();
+            var savedPassword = user.getPassword();
+            var loginPassword = loginRequest.getPassword(); // Assuming it's already plain text
+            if (passwordEncoder.matches(loginPassword, savedPassword)) {
+                return new AuthenticationResponse(userToken, name, id,  email,phoneNumber, user.getRole() );
+            }
+            throw new UnAuthorizedException("Incorrect password", INVALID_CREDENTIALS);
         } catch (Exception e) {
             log.error(format(ERROR_MSG, e.getLocalizedMessage()));
             throw new UnAuthorizedException("Invalid email/or password", INVALID_CREDENTIALS);
         }
     }
 
-    @Transactional
-    public AuthenticationResponse loginEmployee(LoginRequest loginRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()
-                    ));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            User employee = userRepository.findUserByEmailAndRole(loginRequest.getEmail(), Role.EMPLOYEE)
-                    .orElseThrow(()->new EmployeeNotFoundException( "Employee not found"));
-            var employeeToken = jwtService.generateJwtToken(employee);
-            var name = employee.getFirstName() + " " + employee.getLastName();
-            return new AuthenticationResponse(employeeToken, name, employee.getRole());
-        } catch (Exception e) {
-            log.error(format(ERROR_MSG, e.getLocalizedMessage()));
-            throw new UnAuthorizedException("Invalid email/or password", INVALID_CREDENTIALS);
-        }
-    }
-
-
-    @Transactional
-    public AuthenticationResponse loginAdmin(LoginRequest loginRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()
-                    ));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            User admin = userRepository.findUserByEmailAndRole(loginRequest.getEmail(), Role.ADMIN)
-                    .orElseThrow(()->new EmployeeNotFoundException( "Admin not found"));
-            var adminToken = jwtService.generateJwtToken(admin);
-            var name = admin.getFirstName() + " " + admin.getLastName();
-            return new AuthenticationResponse(adminToken, name, admin.getRole());
-        } catch (Exception e) {
-            log.error(format(ERROR_MSG, e.getLocalizedMessage()));
-            throw new UnAuthorizedException("Invalid email/or password", INVALID_CREDENTIALS);
-        }
-    }
 }

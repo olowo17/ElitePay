@@ -17,18 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     private final LoginService loginService;
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> loginUserEntity(@RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(loginService.loginUser(loginRequest), HttpStatus.OK);
-    }
-
-    @PostMapping("/employee/login")
-    public ResponseEntity<AuthenticationResponse> loginEmployeeEntity(@RequestBody LoginRequest loginRequest) {
-        return new ResponseEntity<>(loginService.loginEmployee(loginRequest), HttpStatus.OK);
-    }
-    @PostMapping("/admin/login")
-    public ResponseEntity<AuthenticationResponse> loginAdminEntity(@RequestBody LoginRequest loginRequest) {
-        return new ResponseEntity<>(loginService.loginAdmin(loginRequest), HttpStatus.OK);
     }
 
 }
