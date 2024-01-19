@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,8 +45,4 @@ public class EmployeeController {
         return userService.getUsersByRole(role);
     }
 
-    @GetMapping("/email")
-    public User getByEmail(@RequestParam String email, Role role){
-        return userService.getUserByEmail(email);
-    }
 }

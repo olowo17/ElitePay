@@ -3,6 +3,8 @@ package com.michael.libertybank.controllers;
 import com.michael.libertybank.dto.APIResponse;
 import com.michael.libertybank.dto.signUp.SignUpRequestDTO;
 import com.michael.libertybank.dto.signUp.SignUpResponseDTO;
+import com.michael.libertybank.model.Role;
+import com.michael.libertybank.model.User;
 import com.michael.libertybank.repository.UserRepository;
 import com.michael.libertybank.services.UserService;
 import com.michael.libertybank.util.Converter;
@@ -14,17 +16,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/users")
 @AllArgsConstructor
 @Slf4j
 public class UserController {
     public static final String SUCCESS = "Success";
-    private UserService customerService;
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<APIResponse> createNewUser(@RequestBody @Valid SignUpRequestDTO signUpRequestDTO) {
         log.info("User Controller:: create new user request body {}", Converter.jsonAsString(signUpRequestDTO));
-        SignUpResponseDTO signUpResponseDTO = customerService.registerUser(signUpRequestDTO);
+        SignUpResponseDTO signUpResponseDTO = userService.registerUser(signUpRequestDTO);
 
         APIResponse<SignUpResponseDTO> responseDto = APIResponse
                 .<SignUpResponseDTO>builder()
@@ -37,4 +39,8 @@ public class UserController {
     }
 
 
+    @GetMapping("/email")
+    public User getByEmail(@RequestParam String email ){
+        return userService.getUserByEmail(email);
+    }
 }
