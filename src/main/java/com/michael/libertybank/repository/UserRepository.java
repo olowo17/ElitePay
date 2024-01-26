@@ -24,5 +24,4 @@ public interface  UserRepository extends JpaRepository <User,Long> {
     @Query("SELECT new  com.michael.libertybank.dto.FullNameDto (c.firstName, c.lastName) FROM User c WHERE c.id = :customerId")
     FullNameDto getCustomerFullName(@Param("customerId") Long customerId);
 
-
 }

@@ -81,5 +81,11 @@ public class UserService implements IUserService {
         return userRepository.findCustomerByEmail(email).orElseThrow(()-> new CustomerNotFoundException(" user not found"));
     }
 
+    public String deleteUser(String email){
+        var user= getUserByEmail(email);
+        userRepository.delete(user);
+        return "user deleted successfully";
+    }
+
 }
 
