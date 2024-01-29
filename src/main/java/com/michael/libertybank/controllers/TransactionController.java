@@ -49,9 +49,14 @@ public class TransactionController {
         TransactionDetails transactionDetails = transactionService.generateTransactionReceipt(transactionId);
         PdfGenerator.generateTransactionPdf(transactionDetails, response);
     }
-    @GetMapping("/{accountStatement}")
-    public List<Transaction> getAccountStatement (@PathVariable String accountStatement, @RequestParam String accountNumber){
+    @GetMapping("/accountStatement")
+    public List<Transaction> getAccountStatement (@RequestParam String accountNumber){
      return transactionService.findByAccountNumber(accountNumber);
+    }
+
+    @GetMapping("/accountStatement/{accountId}")
+    public List<Transaction> getAccountStatementById (@PathVariable Long accountId){
+        return transactionService.findByAccountId(accountId);
     }
 
     @PostMapping("/accountStatement/date/{page}/{size}")

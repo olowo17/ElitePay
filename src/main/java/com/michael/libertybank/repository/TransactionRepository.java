@@ -18,19 +18,21 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     Optional<Transaction> findByTransactionId(String transactionId);
 
     @Query("SELECT t FROM Transaction t " +
-            "WHERE t.senderAccount.accountNumber = :accountNumber OR t.receiverAccount.accountNumber = :accountNumber")
+            "WHERE t.senderAccount.accountNumber = :accountNumber AND " +
+            "t.receiverAccount.accountNumber = :accountNumber")
     List<Transaction> findBySenderOrReceiverAccountNumber(@Param("accountNumber") String accountNumber);
 
     @Query("SELECT t FROM Transaction t " +
-            "WHERE t.senderAccount.id = :accountId OR t.receiverAccount.id = :accountId")
-    List<Transaction> findBySenderOrReceiverAccountId(@Param("accountId") Long accountId);
-
-    @Query("SELECT t FROM Transaction t " +
-            "WHERE (t.senderAccount.accountNumber = :accountNumber OR t.receiverAccount.accountNumber = :accountNumber) " +
+            "WHERE (t.senderAccount.accountNumber = :accountNumber OR" +
+            " t.receiverAccount.accountNumber = :accountNumber) " +
             "AND t.transactionDate BETWEEN :startDate AND :endDate")
     Page<Transaction> findBySenderOrReceiverAccountNumberAndDate(
             @Param("accountNumber") String accountNumber,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable);
+
+    @Query("SELECT t FROM Transaction t " +
+            "WHERE t.senderAccount.id = :accountId OR t.receiverAccount.id = :accountId")
+    List<Transaction> findBySenderOrReceiverAccountId(@Param("accountId") Long accountId);
 }

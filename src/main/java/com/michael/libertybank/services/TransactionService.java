@@ -157,6 +157,10 @@ public class TransactionService implements  ITransactionService{
         return transactionRepository.findBySenderOrReceiverAccountNumber(accountNumber);
     }
 
+    public List<Transaction> findByAccountId(Long accountId) {
+        return transactionRepository.findBySenderOrReceiverAccountId(accountId);
+    }
+
 
     @Override
     public Page<Transaction> getTransactionsByDate(

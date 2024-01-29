@@ -20,7 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Page<Account> findByAccountType(AccountType accountType, Pageable pageable);
 
-    @Query("SELECT new com.michael.libertybank.dto.CustomerAcctDetails(a.accountNumber, a.accountType, a.accountBalance) " +
+    @Query("SELECT new com.michael.libertybank.dto.CustomerAcctDetails(a.accountNumber, a.accountType, a.accountBalance, a.id) " +
             "FROM Account a " +
             "WHERE a.accountHolder = :accountHolder")
 
